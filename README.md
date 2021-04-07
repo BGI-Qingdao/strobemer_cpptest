@@ -32,7 +32,7 @@ int main() {
 }
 ```
 
-then compile and link it like
+then compile and link it like:
 
 ```
 g++  -std=c++11 -c strobemer.cpp -o strobemer.o
@@ -49,10 +49,22 @@ g++  -std=c++11 example.cpp strobemer.o -o example
 * equal probability of sub/ins/del.
 * each test run 100 times.
 
+
+
+
+
 ## benchmark_SIM-R-match-only
 
 * compare the match number of all kmer/strobemer.
 * compare k30, randstrobe(2,15,50) and minstrobe(2,15,50). 
+
+Results of the "average match of all  kmers/strobemers (%) " for different error rates and different methods:
+
+|  |  0.01  | 0.05 | 0.1 |
+| --- | --- | --- |--- |
+| Kmer(30) | 74.6 | 22.5 | 4.7 |
+| minstrobe(2,15,50) | 70.1 | 17.5 | 3.2 |
+| randstrobe(2,15,50) | 70.1 | 17.5 | 3.2 |
 
 ## benchmark_SIM-R-snp30
 
@@ -61,6 +73,17 @@ g++  -std=c++11 example.cpp strobemer.o -o example
 * compare k30, randstrobe(2,15,50) and minstrobe(2,15,50).
 * for k30, one snp generate 30 kmer markers.
 * for strobemer(2,15,50), each snp generate 65 strobemer markers.
+
+Results of the "average match number of all snp markers" for different error rates and different methods:
+
+|  |  0.01  | 0.05 | 0.1 |
+| --- | --- | --- |--- |
+| Kmer(30) | 2210 | 665 | 143 |
+| minstrobe(2,15,50) | 4511 | 1100 | 208 |
+| randstrobe(2,15,50) | 4502 | 1134 | 210 |
+
+
+
 
 ## benchmark_SIM-R-snp20
 
@@ -71,5 +94,13 @@ g++  -std=c++11 example.cpp strobemer.o -o example
 * for K40, one snp generate 40 kmer markers.
 * for strobemer(2,10,30), each snp generate 40 strobemer markers.
 
+Results of the "average match number of all snp markers" for different error rates and different methods:
+
+|  |  0.01  | 0.05 | 0.1 |
+| --- | --- | --- |--- |
+| Kmer(20) | 1631.5 | 748.93 | 260.72 |
+| Kmer(40) | 2682.38 | 540.22 | 62.83 |
+| minstrobe(2,10,30) | 3171.38 | 1296.55 | 411.71 |
+| randstrobe(2,10,30) | 3164.28 | 1292.72 | 417.33 |
 
 Enjoy ~~
