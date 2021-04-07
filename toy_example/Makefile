@@ -3,8 +3,8 @@
 all: example
 
 example: ../strobemer.cpp ../strobemer.h example.cpp
-	g++ -I../ -c ../strobemer.cpp -o strobemer.o
-	g++ -I../  example.cpp strobemer.o -o example
+	g++ -I../ -std=c++11 -c ../strobemer.cpp -o strobemer.o
+	g++ -I../ -std=c++11 example.cpp strobemer.o -o example
 	./example
 
 

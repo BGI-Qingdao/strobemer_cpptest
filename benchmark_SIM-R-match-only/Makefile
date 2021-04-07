@@ -1,16 +1,16 @@
 
 all: clean strobemer.o 
-	g++ random100k.cpp -o random100k
-	g++ rmutation100k.cpp -o  rmutation100k
-	g++ gen_kmer.cpp -o gen_kmer
-	g++ check_kmer.cpp -o check_kmer
-	g++ gen_minstrobe.cpp strobemer.o -o gen_minstrobe
-	g++ check_minstrobe.cpp strobemer.o -o check_minstrobe
-	g++ gen_randstrobe.cpp strobemer.o -o gen_randstrobe
-	g++ check_randstrobe.cpp strobemer.o -o check_randstrobe
+	g++ -std=c++11 random100k.cpp -o random100k
+	g++ -std=c++11 rmutation100k.cpp -o  rmutation100k
+	g++ -std=c++11 gen_kmer.cpp -o gen_kmer
+	g++ -std=c++11 check_kmer.cpp -o check_kmer
+	g++ -std=c++11 gen_minstrobe.cpp strobemer.o -o gen_minstrobe
+	g++ -std=c++11 check_minstrobe.cpp strobemer.o -o check_minstrobe
+	g++ -std=c++11 gen_randstrobe.cpp strobemer.o -o gen_randstrobe
+	g++ -std=c++11 check_randstrobe.cpp strobemer.o -o check_randstrobe
 
 strobemer.o:
-	g++ -c ../strobemer.cpp -o strobemer.o
+	g++ -std=c++11 -c ../strobemer.cpp -o strobemer.o
 
 
 clean:

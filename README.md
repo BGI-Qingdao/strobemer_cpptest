@@ -35,8 +35,8 @@ int main() {
 then compile and link it like
 
 ```
-g++  -c strobemer.cpp -o strobemer.o
-g++  example.cpp strobemer.o -o example
+g++  -std=c++11 -c strobemer.cpp -o strobemer.o
+g++  -std=c++11 example.cpp strobemer.o -o example
 ```
 
 # There benchmarks
