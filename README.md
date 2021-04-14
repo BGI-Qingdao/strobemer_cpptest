@@ -3,9 +3,15 @@
 what is strobemer? see https://github.com/ksahlin/strobemers
 
 1. this project implement an c++ version of the strobemer ( W=k+n*w ) with small difference (the window will not shrink at the end of sequence).
-2. there small benchmark were attached. (Ignore them if your don't care)
+
+* randstrobes supported.
+* minstrobees supported.
+* hybirdstrobes coming soon ... 
+  
+2. there small benchmark were attached. (Ignore them if you don't care)
 
 # The implementation of strobemer
+
 
 ## How to use the c++ implemention of strobemer ? See toy_example 
 
