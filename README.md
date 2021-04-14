@@ -6,6 +6,7 @@ what is strobemer? see https://github.com/ksahlin/strobemers
 
 * randstrobes supported.
 * minstrobees supported.
+* switch from s(n, k, w) to s(n, k, w_min, w_max) coming soon ...
 * hybirdstrobes coming soon ... 
   
 2. there small benchmark were attached. (Ignore them if you don't care)
