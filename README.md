@@ -5,7 +5,7 @@ what is strobemer? see https://github.com/ksahlin/strobemers
 1. this project implement an c++ version of the strobemer ( W=k+n*w ) with small difference (the window will not shrink at the end of sequence).
 
 * randstrobes supported.
-* minstrobees supported.
+* minstrobes supported.
 * switch from s(n, k, w) to s(n, k, w_min, w_max) coming soon ...
 * hybirdstrobes coming soon ... 
   
