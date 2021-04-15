@@ -157,27 +157,37 @@ struct hash_kmer {
 int strobemer::nkmer;
 int strobemer::ksize;
 int strobemer::wsize;
+int strobemer::wmin;
 int strobemer::span ;
 int strobemer::kspan;
 strobemer_type strobemer::type ;
 
-void strobemer::init(int n, int k , int w , strobemer_type t){
+void strobemer::init(int n, int k , int w_min , int w_max, strobemer_type t){
     assert(n>1);
-    assert(w>k);
+    assert(w_min>=k);
+    assert(w_max>w_min);
     assert(t == strobemer_type::minstrobe || t == strobemer_type::randstrobe );
     nkmer = n;
     ksize = k;
-    wsize = w;
-    span=k+(n-1)*w;
-    kspan=w-k+1;
+    wsize = w_max;
+    wmin = w_min ;
+    span=k+(wmin-k)+(n-1)*wsize;
+    kspan=wsize - wmin +1;
     type = t ;
     binary_kmer::InitK(k);
+
     std::cerr<<"INFO: init strobemer with"
         <<" n="<<n
         <<" k="<<k
-        <<" w="<<w
-        <<" t="<<((t==strobemer_type::minstrobe) ? "minstrobe" : "randstrobe")
-        <<" span="<<span
+        <<" wmin="<<wmin
+        <<" wmax="<<wsize;
+    if( t == strobemer_type::minstrobe ) 
+        std::cerr<<" t="<<"minstrobe";
+    else if ( t == strobemer_type::randstrobe ) 
+        std::cerr<<" t="<<"randstrobe";
+    else 
+        std::cerr<<" t="<<"hybridstrobe";
+    std::cerr<<" span="<<span
         <<" kspan="<<kspan
         <<std::endl;
 }
@@ -187,6 +197,8 @@ void strobemer::chop_strobemer(const char * seq,int len, strobemer * buff){
         chop_minstrobe(seq,len,buff);
     } else if ( type == strobemer_type::randstrobe) {
         chop_randstrobe(seq,len,buff);
+    } else if (  type == strobemer_type::hybridstrobe ){
+        chop_hybridstrobe(seq,len,buff);
     } else {
         assert(0);
     }
@@ -230,7 +242,7 @@ void strobemer::chop_minstrobe(const char * seq,int len, strobemer * buff){
         int p0 = i ;
         strncpy(buff[i].kmer_forward, &seq[p0],strobemer::ksize);
         // 1.1 find the ki minimizer in [wi_s , wi_e)
-        int wi_s = i+strobemer::ksize;
+        int wi_s = i+strobemer::wmin;
         int wi_e = wi_s+strobemer::kspan ;
         int k_shift = strobemer::ksize;
         for( int ki=1; ki<strobemer::nkmer ; ki++){
@@ -294,7 +306,7 @@ void strobemer::chop_randstrobe(const char * seq,int len, strobemer * buff){
         strncpy(buff[i].kmer_forward, &seq[p0],strobemer::ksize);
         uint64_t h_prev = hkmer_buffer[i].hash_forward ;
         // 1.1 find the ki minimizer in [wi_s , wi_e)
-        int wi_s = i+strobemer::ksize;
+        int wi_s = i+strobemer::wmin;
         int wi_e = wi_s+strobemer::kspan ;
         int k_shift = strobemer::ksize;
         for( int ki=1; ki<strobemer::nkmer ; ki++){
@@ -303,6 +315,73 @@ void strobemer::chop_randstrobe(const char * seq,int len, strobemer * buff){
             uint64_t h_now;
             for( int j = wi_s ; j < wi_e ; j++ ){
                 h_now = h_prev ^hkmer_buffer[j].hash_forward ;
+                if ( p_next == -1 || h_now < temp_min ) {
+                    temp_min = h_now;
+                    p_next = j ;
+                }
+            }
+            strncpy(&buff[i].kmer_forward[k_shift], &seq[p_next],strobemer::ksize);
+            wi_s=wi_s+strobemer::wsize;
+            wi_e=wi_s+strobemer::kspan;
+            k_shift += strobemer::ksize;
+            h_prev = h_now ;
+        }
+    }
+    // free memory
+    delete [] hkmer_buffer;
+    delete [] rc_seq;
+}
+
+void strobemer::chop_hybridstrobe(const char * seq,int len, strobemer * buff){
+    // sanity check ...
+    assert(seq!=nullptr);
+    assert(len>=strobemer::span);
+    // alloc buffers
+    char * rc_seq = new char[len];
+    hash_kmer* hkmer_buffer = new hash_kmer[len-binary_kmer::ksize+1];
+    // sanity check ...
+    assert(rc_seq!=nullptr);
+    assert(hkmer_buffer!=nullptr);
+    // fill buffers
+    reverse_complete(seq,len,rc_seq);
+    hash_kmer::chop_kmers(seq,len,hkmer_buffer);
+    // clean buffer
+    for( int i=0 ; i<=len-strobemer::span; i++ ){
+        buff[i].valid = false;
+    }
+
+    for( int i=0 ; i<=len-strobemer::span; i++ ){
+        // [i,w1_s) [w1_s , w1_e) [w1_e,w2_e)
+        bool valid = true;
+        // check the validation of span area
+        for( int j = i ; j < i+strobemer::kspan; j++ ){
+            if( ! hkmer_buffer[j].valid ) {
+                i = j ; // iterator jump all infected area.
+                valid =false ;
+                break;
+            }
+        }
+        if( ! valid ) continue ;
+        buff[i].valid = true;
+        //
+        // -----------------------------------------------------------------------
+        //                                     k            w       ....
+        // 1. construct forward strobemer in [i,w1_s) [w1_s , w1_e) ....
+        int p0 = i ;
+        strncpy(buff[i].kmer_forward, &seq[p0],strobemer::ksize);
+        uint64_t h_prev = hkmer_buffer[i].hash_forward ;
+        // 1.1 find the ki minimizer in [wi_s , wi_e)
+        int wi_s = i+strobemer::wmin;
+        int wi_e = wi_s+strobemer::kspan ;
+        int k_shift = strobemer::ksize;
+        for( int ki=1; ki<strobemer::nkmer ; ki++){
+            int p_next = -1;
+            uint64_t temp_min ;
+            uint64_t h_now;
+            int small_window_size = strobemer::kspan /3 ;
+            int current_window = h_prev % 3 ;
+            for( int j = wi_s + current_window * small_window_size; j < wi_s + current_window * small_window_size + small_window_size ; j++ ){
+                h_now = hkmer_buffer[j].hash_forward ;
                 if ( p_next == -1 || h_now < temp_min ) {
                     temp_min = h_now;
                     p_next = j ;

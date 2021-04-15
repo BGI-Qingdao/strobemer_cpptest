@@ -7,7 +7,7 @@ int main(int argc, char ** argv)
     srand(time(NULL));
     std::string input;
     std:getline(std::cin,input);
-    strobemer::init(2,15,50,strobemer_type::randstrobe);
+    strobemer::init(2,15,15,50,strobemer_type::randstrobe);
     int number = input.size()-strobemer::strobmer_span()+1;
     strobemer * buff = new strobemer[number];
     strobemer::chop_strobemer(input.c_str(),input.size(),buff);

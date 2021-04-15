@@ -2,12 +2,14 @@
 
 what is strobemer? see https://github.com/ksahlin/strobemers
 
-1. this project implement an c++ version of the strobemer ( W=k+n*w ) with small difference (the window will not shrink at the end of sequence).
+1. this project implement an c++ version of the strobemer s(n,k,w_min,w_max) with small difference (the window will not shrink at the end of sequence).
 
-* randstrobes supported.
-* minstrobes supported.
-* switch from s(n, k, w) to s(n, k, w_min, w_max) coming soon ...
-* hybirdstrobes coming soon ... 
+Features:
+
+* any n>1 is supported.
+* randstrobes is supported.
+* minstrobes is supported.
+* hybirdstrobes is supported.
   
 2. there small benchmark were attached. (Ignore them if you don't care)
 
@@ -25,8 +27,9 @@ what is strobemer? see https://github.com/ksahlin/strobemers
 
 int main() {
      char seq[101]="ATGGGCAGAGTTTGACGTAGTCAATGCTTATGAACGAACGCTCCAATATGAATCAGCTCGTGATTTTTGCTGTAAAAATCGTAGCATACTGTTTGATAAA";
-     //strobemer::init(3,13,20,strobemer_type::minstrobe); // n=3,k=13,w1=w2=20,type=minstrobe
-     strobemer::init(3,13,20,strobemer_type::randstrobe);  // n=3,k=13,w1=w2=20,type=randstrobe
+     //strobemer::init(3,13,13,20,strobemer_type::minstrobe); // n=3,k=13,w_min=13,w_max=20,type=minstrobe
+     //strobemer::init(3,13,13,21,strobemer_type::hybridstrobe); // n=3,k=13,w_min=13,w_max=20,type=hybridstrobe
+     strobemer::init(3,13,13,20,strobemer_type::randstrobe);  // n=3,k=13,w_min=13,w_max=20,type=randstrobe
      int number = 100-strobemer::strobmer_span()+1;
      strobemer * buff = new strobemer[number];
      strobemer::chop_strobemer(seq,100,buff);
@@ -70,8 +73,8 @@ Results of the "average match of all  kmers/strobemers (%) " for different error
 |  |  0.01  | 0.05 | 0.1 |
 | --- | --- | --- |--- |
 | Kmer(30) | 74.6 | 22.5 | 4.7 |
-| minstrobe(2,15,50) | 70.1 | 17.5 | 3.2 |
-| randstrobe(2,15,50) | 70.1 | 17.5 | 3.2 |
+| minstrobe(2,15,15,50) | 70.1 | 17.5 | 3.2 |
+| randstrobe(2,15,15,50) | 70.1 | 17.5 | 3.2 |
 
 ## benchmark_SIM-R-snp30
 
@@ -86,8 +89,8 @@ Results of the "average match number of all snp markers" for different error rat
 |  |  0.01  | 0.05 | 0.1 |
 | --- | --- | --- |--- |
 | Kmer(30) | 2210 | 665 | 143 |
-| minstrobe(2,15,50) | 4511 | 1100 | 208 |
-| randstrobe(2,15,50) | 4502 | 1134 | 210 |
+| minstrobe(2,15,15,50) | 4511 | 1100 | 208 |
+| randstrobe(2,15,15,50) | 4502 | 1134 | 210 |
 
 
 
@@ -107,7 +110,7 @@ Results of the "average match number of all snp markers" for different error rat
 | --- | --- | --- |--- |
 | Kmer(20) | 1631.5 | 748.93 | 260.72 |
 | Kmer(40) | 2682.38 | 540.22 | 62.83 |
-| minstrobe(2,10,30) | 3171.38 | 1296.55 | 411.71 |
-| randstrobe(2,10,30) | 3164.28 | 1292.72 | 417.33 |
+| minstrobe(2,10,10,30) | 3171.38 | 1296.55 | 411.71 |
+| randstrobe(2,10,10,30) | 3164.28 | 1292.72 | 417.33 |
 
 Enjoy ~~

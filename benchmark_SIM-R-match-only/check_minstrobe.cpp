@@ -26,7 +26,7 @@ int main(int argc , char **argv){
     infs.close();
     std::string input;
     std::getline(std::cin,input);
-    strobemer::init(2,15,50,strobemer_type::minstrobe);  
+    strobemer::init(2,15,15,50,strobemer_type::minstrobe);  
     int number = input.size()-strobemer::strobmer_span()+1;
     strobemer * buff = new strobemer[number];
     strobemer::chop_strobemer(input.c_str(),input.size(),buff);
