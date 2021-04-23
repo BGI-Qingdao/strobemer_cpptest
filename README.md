@@ -92,8 +92,13 @@ Results of the "average match number of all snp markers" for different error rat
 | minstrobe(2,15,15,50) | 4511 | 1100 | 208 |
 | randstrobe(2,15,15,50) | 4502 | 1134 | 210 |
 
+Results of the "#detected snp " for different error rates and different methods:
 
-
+|  |  0.01  | 0.05 | 0.1 |
+| --- | --- | --- |--- |
+| Kmer(30) | 94.5 | 55.5 | 18 |
+| minstrobe(2,15,15,50) | 98 | 68.5 | 26.3 |
+| randstrobe(2,15,15,50) | 99 | 92.3 | 52.3 |
 
 ## benchmark_SIM-R-snp20
 
@@ -112,5 +117,15 @@ Results of the "average match number of all snp markers" for different error rat
 | Kmer(40) | 2682.38 | 540.22 | 62.83 |
 | minstrobe(2,10,10,30) | 3171.38 | 1296.55 | 411.71 |
 | randstrobe(2,10,10,30) | 3164.28 | 1292.72 | 417.33 |
+
+Results of the "#detected snp " for different error rates and different methods:
+
+|  |  0.01  | 0.05 | 0.1 |
+| --- | --- | --- |--- |
+| Kmer(20) | 96.79 | 71.05 | 37.79 |
+| Kmer(40) | 92.81 | 39.98 | 8.01 |
+| minstrobe(2,10,10,30) | 98.54 | 85.05 | 51.82 |
+| randstrobe(2,10,10,30) | 98.99 | 95.24 | 73.39 |
+
 
 Enjoy ~~
